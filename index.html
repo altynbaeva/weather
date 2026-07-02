@@ -2,13 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>weather-app</title>
   </head>
   <body>
-    <p>666767676767</p>
-    <div id="app"></div>
+    <main class="container">
+      <div class="seach-container">
+        <form class="search-form">
+          <input type="search" placeholder="Введите город" name="query" aria-label="Поиск">
+          <button type="submit">Найти</button>
+        </form>
+      </div>
+      <article class="main-weather">
+        <div class="main-temp-block">
+          <p class="main-temp"></p>
+          <p class="extended-temp"></p>
+        </div>
+        <div class="main-time-block">
+          <time class="time" datetime=""></time>
+          <time class="date" datetime=""></time>
+          <p class="city-name"></p>
+        </div>
+        <ul class="hourly-list"></ul>
+        <ul class="daily-list"></ul>
+      </article>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

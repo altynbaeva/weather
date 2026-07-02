@@ -1,0 +1,25 @@
+.search-form {
+    display: flex;
+    max-width: 300px;
+}
+
+.search-form input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 25px 0 0 25px;
+    outline: none;
+}
+
+.search-form button {
+    padding: 10px 20px;
+    background-color: #FF8C00;
+    color: white;
+    border: 2px solid #FF8C00;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+}
+
+.search-form input:focus {
+    border-color: #FF8C00;
+}
