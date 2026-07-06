@@ -25,6 +25,14 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
             throw new Error("Не удалось получить погоду!")
         }
 
+        if (typeof main.temp_min !== "number" || isNaN(main.temp_min)) {
+            throw new Error("Не удалось получить погоду!")
+        }
+
+        if (typeof main.temp_max !== "number" || isNaN(main.temp_max)) {
+            throw new Error("Не удалось получить погоду!")
+        }
+
         if (!Array.isArray(obj.weather) || obj.weather.length === 0) {
             throw new Error("Не удалось получить погоду!")
         } 
@@ -51,7 +59,9 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
 
         return {
             main: {
-                temp: main.temp as number
+                temp: main.temp as number,
+                tempMin: main.temp_min as number,
+                tempMax: main.temp_max as number
             },
             weather: [
                 {
@@ -90,6 +100,14 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
             throw new Error("Не удалось получить прогноз!");
         }
 
+        if (typeof main.temp_min !== "number" || isNaN(main.temp_min)) {
+            throw new Error("Не удалось получить прогноз!");
+        }
+
+        if (typeof main.temp_max !== "number" || isNaN(main.temp_max)) {
+            throw new Error("Не удалось получить прогноз!");
+        }
+
         if (!Array.isArray(item.weather) || item.weather.length === 0) {
             throw new Error("Не удалось получить прогноз!");
         }
@@ -120,7 +138,11 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
         return {
             list: obj.list as Array<{
             dt_txt: string;
-            main: { temp: number };
+            main: { 
+                temp: number,
+                tempMin: number,
+                tempMax: number
+             };
             weather: Array<{ description: string; icon: string }>;
             }>,
             city: {
@@ -135,7 +157,7 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
         try {
             const response = await axios.get(url);
             const data = this.validateCurrentWeatherData(response.data);
-            const weather = new Weather(data.main.temp, data.weather[0].description, data.weather[0].icon, data.name);
+            const weather = new Weather(data.main.temp, data.main.tempMin, data.main.tempMax, data.weather[0].description, data.weather[0].icon, data.name);
             return weather;
         }
 
@@ -150,13 +172,12 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
         try {
             const response = await axios.get(url);
             const data = this.validateForecastData(response.data);
-            let array = [];
-            for (let i = 0; i < array.length; i++) {
-                const forecastItem = new ForecastItem(data.list[i].dt_txt, data.list[i].main.temp, data.list[i].weather[i].description, data.list[i].weather[i].icon);
-                array.push(forecastItem)
+            const items: ForecastItem[] = [];
+            for (let i = 0; i < data.list.length; i++) {
+                const forecastItem = new ForecastItem(data.list[i].dt_txt, data.list[i].main.temp, data.list[i].main.tempMin, data.list[i].main.tempMax, data.list[i].weather[0].description, data.list[i].weather[0].icon);
+                items.push(forecastItem)
             }
-            const forecastList = new ForecastList(data.city.name, array)
-            return forecastList;
+            return new ForecastList(data.city.name, items);
         }
 
         catch (error) {
@@ -172,6 +193,8 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
 export interface CurrentWeatherData {
     main: {
         temp: number;
+        tempMin: number;
+        tempMax: number;
     };
     weather: Array<{
         description: string;
@@ -185,6 +208,8 @@ export interface ForecastData {
         dt_txt: string;
         main: {
             temp: number;
+            tempMin: number;
+            tempMax: number
         }
         weather: Array<{
             description: string;

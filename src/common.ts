@@ -6,12 +6,16 @@ export interface IWeatherApi {
 
 export class Weather {
     temp: number = 0;
+    tempMin: number = 0;
+    tempMax: number = 0;
     description: string = "";
     icon: string = "";
     city: string = "";
 
-    constructor(temp: number, description: string, icon: string, city: string) {
+    constructor(temp: number, tempMin: number, tempMax: number, description: string, icon: string, city: string) {
         this.temp = temp;
+        this.tempMin = tempMin;
+        this.tempMax = tempMax;
         this.description = description;
         this.icon = icon;
         this.city = city;
@@ -21,12 +25,16 @@ export class Weather {
 export class ForecastItem {
     date: string = "";
     temp: number = 0;
+    tempMin: number = 0;
+    tempMax: number = 0;
     description: string = "";
     icon: string = "";
 
-    constructor(date: string, temp: number, description: string, icon: string) {
+    constructor(date: string, temp: number, tempMin: number, tempMax: number, description: string, icon: string) {
         this.date = date;
         this.temp = temp;
+        this.tempMin = tempMin;
+        this.tempMax = tempMax;
         this.description = description;
         this.icon = icon;
     }
@@ -43,5 +51,11 @@ export class ForecastList {
 }
 
 export interface IWeatherState {
-    
+    weather: Promise<Weather>;
+    forecast: Promise<ForecastList>;
+    loading: boolean;
+    error: string | null;
+    getIconUrl(iconCode: string): string;
+    setLoading(loading: boolean): void;
+    setError(error: string | null): void;
 }

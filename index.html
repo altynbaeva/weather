@@ -7,24 +7,25 @@
   </head>
   <body>
     <main class="container">
+      <div class="loading-indicator" id="loading-indicator" hidden></div>
       <div class="seach-container">
         <form class="search-form">
           <input type="search" placeholder="Введите город" name="query" aria-label="Поиск">
           <button type="submit">Найти</button>
         </form>
       </div>
-      <article class="main-weather">
-        <div class="main-temp-block">
+      <article class="main-weather" id="main-weather">
+        <div class="main-temp-block" id="main-temp-block">
           <p class="main-temp"></p>
           <p class="extended-temp"></p>
         </div>
-        <div class="main-time-block">
+        <div class="main-time-block" id="main-time-block">
           <time class="time" datetime=""></time>
           <time class="date" datetime=""></time>
           <p class="city-name"></p>
         </div>
-        <ul class="hourly-list"></ul>
-        <ul class="daily-list"></ul>
+        <ul class="hourly-list" id="hourly-list"></ul>
+        <ul class="daily-list" id="daily-list"></ul>
       </article>
     </main>
     <script type="module" src="/src/main.ts"></script>
