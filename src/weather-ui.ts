@@ -63,16 +63,17 @@ class WeatherUi {
         const dateElem = mainTimeBlock.querySelector(".date") as HTMLTimeElement;
         const cityP = mainTimeBlock.querySelector(".city-name") as HTMLElement;
 
-        const now = new Date();
-        timeElem.dateTime = format(now, "yyyy-MM-dd'T'HH:mm:ss");
-        timeElem.textContent = format(now, "HH:mm");
+        let weatherDate: Date;
+        weatherDate = fromUnixTime(weather.dt);
 
-        dateElem.dateTime = format(now, "yyyy-MM-dd");
-        dateElem.textContent = format(now, "EEE, d MMM", { locale: enUS });
+        timeElem.dateTime = format(weatherDate, "yyyy-MM-dd'T'HH:mm:ss");
+        timeElem.textContent = format(weatherDate, 'HH:mm');
+
+        dateElem.dateTime = format(weatherDate, 'yyyy-MM-dd');
+        dateElem.textContent = format(weatherDate, 'EEE, d MMM', { locale: enUS });
 
         cityP.textContent = weather.city;
 
-        dailyList.innerHTML = '';
         
     }
 }

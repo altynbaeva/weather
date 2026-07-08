@@ -53,6 +53,10 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
             throw new Error("Не удалось получить погоду!")
         }
 
+        if (!obj.dt || typeof obj.dt !== "number") {
+            throw new Error("Не удалось получить погоду!")
+        }
+
         if (!obj.name || typeof obj.name !== "string") {
             throw new Error("Не удалось получить погоду!")
         }
@@ -69,6 +73,7 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
                     icon: weather.icon as string
                 }
             ],
+            dt: obj.dt as number,
             name: obj.name as string
         }
     }
@@ -157,7 +162,7 @@ export class OpenWeatherMapAdapter implements IWeatherApi {
         try {
             const response = await axios.get(url);
             const data = this.validateCurrentWeatherData(response.data);
-            const weather = new Weather(data.main.temp, data.main.tempMin, data.main.tempMax, data.weather[0].description, data.weather[0].icon, data.name);
+            const weather = new Weather(data.main.temp, data.main.tempMin, data.main.tempMax, data.weather[0].description, data.weather[0].icon, data.dt, data.name);
             return weather;
         }
 
@@ -200,6 +205,7 @@ export interface CurrentWeatherData {
         description: string;
         icon: string;
     }>;
+    dt: number;
     name: string;
 }
 

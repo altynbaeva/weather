@@ -10,14 +10,16 @@ export class Weather {
     tempMax: number = 0;
     description: string = "";
     icon: string = "";
+    dt: number = 0;
     city: string = "";
 
-    constructor(temp: number, tempMin: number, tempMax: number, description: string, icon: string, city: string) {
+    constructor(temp: number, tempMin: number, tempMax: number, description: string, icon: string, dt: number, city: string) {
         this.temp = temp;
         this.tempMin = tempMin;
         this.tempMax = tempMax;
         this.description = description;
         this.icon = icon;
+        this.dt = dt;
         this.city = city;
     }
 }
