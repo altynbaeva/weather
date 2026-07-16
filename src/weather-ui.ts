@@ -1,8 +1,6 @@
-import { format, fromUnixTime } from 'date-fns';
-import { enUS } from 'date-fns/locale';
 import type { IWeatherState, Weather, ForecastList } from "./common";
 
-class WeatherUi {
+export class WeatherUi {
     private state: IWeatherState;
 
     constructor(state: IWeatherState) {
@@ -29,6 +27,8 @@ class WeatherUi {
                 this.state.setLoading(false);
                 this.state.setError(error.message || 'Ошибка загрузки данных');
                 loadingIndicator.textContent = `Ошибка: ${this.state.error}`;
+        }   finally {
+                mainWeather.innerHTML = "";
         }
     }
 
@@ -63,17 +63,57 @@ class WeatherUi {
         const dateElem = mainTimeBlock.querySelector(".date") as HTMLTimeElement;
         const cityP = mainTimeBlock.querySelector(".city-name") as HTMLElement;
 
-        let weatherDate: Date;
-        weatherDate = fromUnixTime(weather.dt);
+        const weatherDate = new Date(weather.dt * 1000);
 
-        timeElem.dateTime = format(weatherDate, "yyyy-MM-dd'T'HH:mm:ss");
-        timeElem.textContent = format(weatherDate, 'HH:mm');
+        timeElem.dateTime = weatherDate.toISOString().split('.')[0];
+        timeElem.textContent = weatherDate.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        });
 
-        dateElem.dateTime = format(weatherDate, 'yyyy-MM-dd');
-        dateElem.textContent = format(weatherDate, 'EEE, d MMM', { locale: enUS });
+        dateElem.dateTime =  weatherDate.toISOString().split('T')[0];
+        dateElem.textContent = weatherDate.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric"
+        });
 
         cityP.textContent = weather.city;
 
+        let startIndex = 0;
+        const now = new Date();
+
+        for (let i = 0; i < forecast.items.length; i++) {
+            const itemTime = new Date(forecast.items[i].date.replace(" ","T"));
+
+            if (itemTime > now) {
+                break;
+            }
+            startIndex = i;
+        }
+
+        for (let i = startIndex; i < startIndex + 2; i++) {
+            if (!forecast.items[i]) break;
+            const interval = forecast.items[i];
+            const startHour = parseInt(interval.date.split(" ")[1].split(":")[0]);
+
+            for (let j = 0; j < 3; j++) {
+                const hour = startHour + j;
+                const time = String(hour).padStart(2, "0") + ":00";
+                const li = document.createElement("li");
+                const spanForTime = document.createElement("span");
+                spanForTime.className="span-for-time";
+                spanForTime.textContent = time;
+                const image = document.createElement("img");
+                image.src = this.state.getIconUrl(interval.icon);
+                const spanForTemp = document.createElement("span");
+                spanForTemp.className = "span-for-temp";
+                spanForTemp.textContent = Math.round(interval.temp) + "°";
+                li.append(spanForTime, image, spanForTemp);
+                hourlyList.appendChild(li);
+            }
+        }
+        
         
     }
 }
